@@ -43,10 +43,10 @@ public class Game {
     if (Colour.fromInput(inputs[0]) == null || Colour.fromInput(inputs[1]) == null) {
       MessageCli.INVALID_HUMAN_INPUT.printMessage();
       return;
-    } else {
-      Colour playerColour = Colour.fromInput(inputs[0]);
-      Colour playerGuess = Colour.fromInput(inputs[1]);
     }
+    Colour playerColour = Colour.fromInput(inputs[0]);
+    Colour playerGuess = Colour.fromInput(inputs[1]);
+    MessageCli.PRINT_INFO_MOVE.printMessage(playerName, playerColour.name(), playerGuess.name());
   }
 
   public void showStats() {}
