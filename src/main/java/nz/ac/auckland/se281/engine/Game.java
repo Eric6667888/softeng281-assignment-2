@@ -11,14 +11,14 @@ public class Game {
   // Set the initial values for the all the variables
   public static String AI_NAME = "HAL-9000";
   private int numRounds;
-  public int currentRound;
+  private int currentRound;
   private String playerName;
-  public Difficulty difficultyLevel;
+  private Difficulty difficultyLevel;
   private int totalPlayerPoints = 0;
   private int totalAiPoints = 0;
-  public Colour playerLastChose;
-  public Colour playerLastGuess;
-  public Map<Colour, Integer> colourCounts;
+  private Colour playerLastChose;
+
+  private Map<Colour, Integer> colourCounts;
   private int aiLastpoints = 0;
 
   private int leastUsedCount = 0;
@@ -38,9 +38,10 @@ public class Game {
     this.avoidLastCount = 0;
 
     this.playerLastChose = null;
-    this.playerLastGuess = null;
 
     this.colourCounts = new HashMap<>();
+    // Initialize the colour counts
+    // Set the initial values for the colour counts
     for (Colour c : Colour.values()) {
       colourCounts.put(c, 0);
     }
@@ -54,10 +55,12 @@ public class Game {
   }
 
   public void play() {
+    // Check if the game has started
     if (gameStart == null) {
       MessageCli.GAME_NOT_STARTED.printMessage();
       return;
     }
+    // Set the initial values for the round
     Colour playerColour = null;
     Colour playerGuess = null;
     Colour aiColour = null;
@@ -208,7 +211,7 @@ public class Game {
     colourCounts.put(playerColour, colourCounts.get(playerColour) + 1);
     // set the last colour
     playerLastChose = playerColour;
-    playerLastGuess = playerGuess;
+
     // set the last ai points
     aiLastpoints = aiPoints;
     if (currentRound > numRounds) {
