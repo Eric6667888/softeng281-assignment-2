@@ -8,6 +8,7 @@ import nz.ac.auckland.se281.cli.Utils;
 import nz.ac.auckland.se281.model.Colour;
 
 public class Game {
+  // Set the initial values for the all the variables
   public static String AI_NAME = "HAL-9000";
   private int numRounds;
   public int currentRound;
@@ -26,6 +27,7 @@ public class Game {
   private String gameStart = null;
 
   public void newGame(Difficulty difficulty, int numRounds, String[] options) {
+    // Reset the game state
     this.numRounds = numRounds;
     this.currentRound = 1;
 
@@ -222,6 +224,7 @@ public class Game {
       } else {
         MessageCli.PRINT_TIE_GAME.printMessage();
       }
+      gameStart = null;
     }
   }
 
