@@ -31,11 +31,14 @@ public class Game {
       return;
     }
     MessageCli.START_ROUND.printMessage(currentRound, numRounds);
-    currentRound++;
+
     MessageCli.ASK_HUMAN_INPUT.printMessage();
+
     // Get the input from the user
     String input = Utils.scanner.nextLine();
     String[] inputs = input.split(" ");
+
+    // Check if the input is valid
     if (inputs.length != 2) {
       MessageCli.INVALID_HUMAN_INPUT.printMessage();
       return;
@@ -44,9 +47,19 @@ public class Game {
       MessageCli.INVALID_HUMAN_INPUT.printMessage();
       return;
     }
+
+    // Print the input
     Colour playerColour = Colour.fromInput(inputs[0]);
     Colour playerGuess = Colour.fromInput(inputs[1]);
     MessageCli.PRINT_INFO_MOVE.printMessage(playerName, playerColour.name(), playerGuess.name());
+
+    // produce a random colour every 3 rounds
+    if (currentRound % 3 == 0) {
+      Colour powerColour = Colour.getRandomColourForPowerColour();
+      MessageCli.PRINT_POWER_COLOUR.printMessage(powerColour.name());
+    }
+    // increment the round
+    currentRound++;
   }
 
   public void showStats() {}
