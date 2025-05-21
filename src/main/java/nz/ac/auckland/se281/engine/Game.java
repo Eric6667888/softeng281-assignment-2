@@ -31,6 +31,8 @@ public class Game {
     Colour aiColour = null;
     Colour aiGuess = null;
     Colour powerColour = null;
+    int playerPoints = 0;
+    int aiPoints = 0;
     if (currentRound > numRounds) {
       MessageCli.PRINT_END_GAME.printMessage();
       return;
@@ -91,21 +93,24 @@ public class Game {
 
     // calculate the points
     if (playerGuess == aiColour) {
-      playerPoints++;
+      this.playerPoints++;
       if (currentRound % 3 == 0) {
         if (powerColour == playerGuess) {
-          playerPoints += 2;
+          this.playerPoints += 2;
         }
       }
     }
     if (playerColour == aiGuess) {
-      aiPoints++;
+      this.aiPoints++;
       if (currentRound % 3 == 0) {
         if (powerColour == aiGuess) {
-          aiPoints += 2;
+          this.aiPoints += 2;
         }
       }
     }
+    // print the points
+    MessageCli.PRINT_OUTCOME_ROUND.printMessage(playerName, playerPoints);
+    MessageCli.PRINT_OUTCOME_ROUND.printMessage(AI_NAME, aiPoints);
     // increment the round
     currentRound++;
   }
