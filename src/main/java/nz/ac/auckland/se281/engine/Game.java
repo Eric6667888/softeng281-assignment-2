@@ -26,6 +26,8 @@ public class Game {
   }
 
   public void play() {
+    Colour playerColour = null;
+    Colour playerGuess = null;
     if (currentRound > numRounds) {
       MessageCli.PRINT_END_GAME.printMessage();
       return;
@@ -34,23 +36,35 @@ public class Game {
 
     MessageCli.ASK_HUMAN_INPUT.printMessage();
 
-    // Get the input from the user
-    String input = Utils.scanner.nextLine();
-    String[] inputs = input.split(" ");
-
     // Check if the input is valid
-    if (inputs.length != 2) {
-      MessageCli.INVALID_HUMAN_INPUT.printMessage();
-      return;
-    }
-    if (Colour.fromInput(inputs[0]) == null || Colour.fromInput(inputs[1]) == null) {
-      MessageCli.INVALID_HUMAN_INPUT.printMessage();
-      return;
+    // Ask for input in a loop until valid input is given
+
+    while (true) {
+      // Get the input from the user
+      String input = Utils.scanner.nextLine();
+      String[] inputs = input.trim().split("\\s+");
+
+      // Check length
+      if (inputs.length != 2) {
+        MessageCli.INVALID_HUMAN_INPUT.printMessage();
+        continue;
+      }
+
+      playerColour = Colour.fromInput(inputs[0]);
+      playerGuess = Colour.fromInput(inputs[1]);
+
+      // Check if both inputs are valid colours
+      if (playerColour == null || playerGuess == null) {
+        MessageCli.INVALID_HUMAN_INPUT.printMessage();
+        continue;
+      }
+
+      // Input is valid, break the loop
+      break;
     }
 
     // Print the input
-    Colour playerColour = Colour.fromInput(inputs[0]);
-    Colour playerGuess = Colour.fromInput(inputs[1]);
+
     MessageCli.PRINT_INFO_MOVE.printMessage(playerName, playerColour.name(), playerGuess.name());
 
     // produce a random colour every 3 rounds
