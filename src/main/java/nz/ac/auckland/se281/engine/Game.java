@@ -10,13 +10,13 @@ import nz.ac.auckland.se281.model.Colour;
 public class Game {
   public static String AI_NAME = "HAL-9000";
   private int numRounds;
-  public static int currentRound;
+  public int currentRound;
   private String playerName;
   public Difficulty difficultyLevel;
   private int totalPlayerPoints = 0;
   private int totalAiPoints = 0;
-  public static Colour playerLastChose;
-  public static Colour playerLastGuess;
+  public Colour playerLastChose;
+  public Colour playerLastGuess;
   public Map<Colour, Integer> colourCounts;
   private int aiLastpoints = 0;
 
@@ -24,28 +24,31 @@ public class Game {
   private int avoidLastCount = 0;
 
   private String gameStart = null;
-  private String gameEnd = null;
-
-  public Game() {
-    this.numRounds = 0;
-    Game.currentRound = 1;
-    this.playerName = "";
-    this.difficultyLevel = Difficulty.EASY;
-    this.colourCounts = new HashMap<>();
-    colourCounts.put(Colour.RED, 0);
-    colourCounts.put(Colour.GREEN, 0);
-    colourCounts.put(Colour.BLUE, 0);
-    colourCounts.put(Colour.YELLOW, 0);
-  }
 
   public void newGame(Difficulty difficulty, int numRounds, String[] options) {
+    this.numRounds = numRounds;
+    this.currentRound = 1;
+
+    this.totalPlayerPoints = 0;
+    this.totalAiPoints = 0;
+    this.aiLastpoints = 0;
+    this.leastUsedCount = 0;
+    this.avoidLastCount = 0;
+
+    this.playerLastChose = null;
+    this.playerLastGuess = null;
+
+    this.colourCounts = new HashMap<>();
+    for (Colour c : Colour.values()) {
+      colourCounts.put(c, 0);
+    }
+
     this.gameStart = "Game started";
 
     this.playerName = options[0];
-    MessageCli.WELCOME_PLAYER.printMessage(playerName);
-    this.numRounds = numRounds;
-    currentRound = 1;
     this.difficultyLevel = difficulty;
+
+    MessageCli.WELCOME_PLAYER.printMessage(playerName);
   }
 
   public void play() {
@@ -207,7 +210,7 @@ public class Game {
     // set the last ai points
     aiLastpoints = aiPoints;
     if (currentRound > numRounds) {
-      gameEnd = "Game ended";
+      // print the stats
       showStats();
       MessageCli.PRINT_END_GAME.printMessage();
       // print the winner
