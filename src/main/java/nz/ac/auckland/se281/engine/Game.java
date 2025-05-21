@@ -13,7 +13,8 @@ public class Game {
   public Difficulty difficultyLevel;
   private int totalPlayerPoints = 0;
   private int totalAiPoints = 0;
-  public static Colour playerLastColour;
+  public static Colour playerLastChose;
+  public static Colour playerLastGuess;
 
   public Game() {}
 
@@ -77,10 +78,10 @@ public class Game {
       // Easy AI strategy: Randomly choose a colour
       // The AI will choose a colour randomly from the available colours
       EasyAiStrategy easyAi = new EasyAiStrategy();
-      aiColour = easyAi.aiChooseColour();
+      aiColour = easyAi.aiChooseColour(playerColour);
 
       // The AI will guess the player's colour
-      aiGuess = easyAi.aiChooseColour();
+      aiGuess = easyAi.aiGuessColour(playerGuess);
 
       // Print the AI's choice and guess
       MessageCli.PRINT_INFO_MOVE.printMessage(AI_NAME, aiColour.name(), aiGuess.name());
@@ -90,15 +91,15 @@ public class Game {
       EasyAiStrategy easyAi = new EasyAiStrategy();
       // The AI will choose a colour randomly from the available colours
       if (currentRound == 1) {
-        aiColour = easyAi.aiChooseColour();
+        aiColour = easyAi.aiChooseColour(playerColour);
       } else {
-        aiColour = mediumAi.aiChooseColour();
+        aiColour = easyAi.aiChooseColour(playerLastGuess);
       }
       // The AI will guess the player's colour
       if (currentRound == 1) {
-        aiGuess = easyAi.aiChooseColour();
+        aiGuess = easyAi.aiGuessColour(playerGuess);
       } else {
-        aiGuess = mediumAi.aiChooseColour();
+        aiGuess = mediumAi.aiGuessColour(playerLastChose);
       }
 
       // Print the AI's choice and guess
@@ -135,6 +136,9 @@ public class Game {
     MessageCli.PRINT_OUTCOME_ROUND.printMessage(AI_NAME, aiPoints);
     // increment the round
     currentRound++;
+    // set the last colour
+    playerLastChose = playerColour;
+    playerLastGuess = playerGuess;
   }
 
   public void showStats() {}
