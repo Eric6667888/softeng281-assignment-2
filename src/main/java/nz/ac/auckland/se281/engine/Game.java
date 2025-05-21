@@ -11,8 +11,8 @@ public class Game {
   private int currentRound;
   private String playerName;
   public Difficulty difficultyLevel;
-  private int playerPoints = 0;
-  private int aiPoints = 0;
+  private int totalPlayerPoints = 0;
+  private int totalAiPoints = 0;
 
   public Game() {}
 
@@ -93,21 +93,23 @@ public class Game {
 
     // calculate the points
     if (playerGuess == aiColour) {
-      this.playerPoints++;
+      playerPoints++;
       if (currentRound % 3 == 0) {
         if (powerColour == playerGuess) {
-          this.playerPoints += 2;
+          playerPoints += 2;
         }
       }
     }
     if (playerColour == aiGuess) {
-      this.aiPoints++;
+      aiPoints++;
       if (currentRound % 3 == 0) {
         if (powerColour == aiGuess) {
-          this.aiPoints += 2;
+          aiPoints += 2;
         }
       }
     }
+    this.totalPlayerPoints += playerPoints;
+    this.totalAiPoints += aiPoints;
     // print the points
     MessageCli.PRINT_OUTCOME_ROUND.printMessage(playerName, playerPoints);
     MessageCli.PRINT_OUTCOME_ROUND.printMessage(AI_NAME, aiPoints);
