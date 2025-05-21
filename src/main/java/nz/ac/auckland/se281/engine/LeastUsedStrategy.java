@@ -8,9 +8,19 @@ public class LeastUsedStrategy implements AiStrategy {
   @Override
   public Colour aiColour(Map<Colour, Integer> colourCounts, Colour playerColour) {
     int minCount = Integer.MAX_VALUE;
-    // Hard AI strategy: Randomly choose a colour
-    // The AI will guess the player's colour randomly from the available colours
-    Colour aiColour = Colour.getRandomColourForAi();
-    return aiColour;
+
+    for (int count : colourCounts.values()) {
+      if (count < minCount) {
+        minCount = count;
+      }
+    }
+
+    for (Colour colour : Colour.values()) {
+      int count = colourCounts.getOrDefault(colour, 0);
+      if (count == minCount) {
+        return colour;
+      }
+    }
+    return null;
   }
 }

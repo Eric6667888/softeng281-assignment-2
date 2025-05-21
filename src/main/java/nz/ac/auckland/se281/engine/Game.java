@@ -18,6 +18,10 @@ public class Game {
   public static Colour playerLastChose;
   public static Colour playerLastGuess;
   public Map<Colour, Integer> colourCounts;
+  private int aiLastpoints = 0;
+
+  private int leastUsedCount = 0;
+  private int avoidLastCount = 0;
 
   public Game() {
     this.numRounds = 0;
@@ -121,7 +125,35 @@ public class Game {
       if (currentRound == 1 || currentRound == 2) {
         aiGuess = random.aiColour(colourCounts, playerGuess);
       } else if (currentRound == 3) {
-        aiGuess = leastUsed.aiColour(colourCounts, playerLastGuess);
+        aiGuess = leastUsed.aiColour(colourCounts, playerGuess);
+        leastUsedCount++;
+      } else {
+        if (aiLastpoints == 0 && leastUsedCount > 0) {
+          // The AI will change its strategy to avoid the last colour
+          aiGuess = avoidLast.aiColour(colourCounts, playerLastChose);
+          // Reset the least used count
+          leastUsedCount = 0;
+          avoidLastCount++;
+        } else if (aiLastpoints == 0 && avoidLastCount > 0) {
+          aiGuess = leastUsed.aiColour(colourCounts, playerLastChose);
+          // Reset the avoid last count
+          avoidLastCount = 0;
+          leastUsedCount++;
+        } else if (aiLastpoints > 0 && leastUsedCount > 0) {
+          // The AI will keep using the least used strategy
+          aiGuess = leastUsed.aiColour(colourCounts, playerLastChose);
+          // Reset the least used count
+          leastUsedCount = 0;
+          leastUsedCount++;
+        } else if (aiLastpoints > 0 && avoidLastCount > 0) {
+          // The AI will keep using the avoid last strategy
+          aiGuess = avoidLast.aiColour(colourCounts, playerLastChose);
+          // Reset the avoid last count
+          avoidLastCount = 0;
+          avoidLastCount++;
+        } else {
+          aiGuess = random.aiColour(colourCounts, playerGuess);
+        }
       }
     }
 
@@ -164,6 +196,8 @@ public class Game {
     // set the last colour
     playerLastChose = playerColour;
     playerLastGuess = playerGuess;
+    // set the last ai points
+    aiLastpoints = aiPoints;
   }
 
   public void showStats() {}
