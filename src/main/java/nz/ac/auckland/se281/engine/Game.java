@@ -1,5 +1,7 @@
 package nz.ac.auckland.se281.engine;
 
+import java.util.HashMap;
+import java.util.Map;
 import nz.ac.auckland.se281.Main.Difficulty;
 import nz.ac.auckland.se281.cli.MessageCli;
 import nz.ac.auckland.se281.cli.Utils;
@@ -15,12 +17,18 @@ public class Game {
   private int totalAiPoints = 0;
   public static Colour playerLastChose;
   public static Colour playerLastGuess;
+  public Map<Colour, Integer> colourCounts;
 
   public Game() {
     this.numRounds = 0;
     Game.currentRound = 1;
     this.playerName = "";
     this.difficultyLevel = Difficulty.EASY;
+    this.colourCounts = new HashMap<>();
+    colourCounts.put(Colour.RED, 0);
+    colourCounts.put(Colour.GREEN, 0);
+    colourCounts.put(Colour.BLUE, 0);
+    colourCounts.put(Colour.YELLOW, 0);
   }
 
   public void newGame(Difficulty difficulty, int numRounds, String[] options) {
@@ -82,27 +90,38 @@ public class Game {
     if (difficultyLevel == Difficulty.EASY) {
       // Easy AI strategy: Randomly choose a colour
       // The AI will choose a colour randomly from the available colours
-      RandomStrategy easyAi = new RandomStrategy();
-      aiColour = easyAi.aiColour(playerColour);
+      RandomStrategy random = new RandomStrategy();
+      aiColour = random.aiColour(colourCounts, playerColour);
 
       // The AI will guess the player's colour
-      aiGuess = easyAi.aiColour(playerGuess);
+      aiGuess = random.aiColour(colourCounts, playerGuess);
 
     } else if (difficultyLevel == Difficulty.MEDIUM) {
       // Medium AI strategy: Randomly choose a colour excluding the player's colour
-      AvoidLastStrategy mediumAi = new AvoidLastStrategy();
-      RandomStrategy easyAi = new RandomStrategy();
+      AvoidLastStrategy avoidLast = new AvoidLastStrategy();
+      RandomStrategy random = new RandomStrategy();
       // The AI will choose a colour randomly from the available colours
-      if (currentRound == 1) {
-        aiColour = easyAi.aiColour(playerColour);
-      } else {
-        aiColour = easyAi.aiColour(playerLastGuess);
-      }
+      aiColour = random.aiColour(colourCounts, playerColour);
+
       // The AI will guess the player's colour
       if (currentRound == 1) {
-        aiGuess = easyAi.aiColour(playerGuess);
+        aiGuess = random.aiColour(colourCounts, playerGuess);
       } else {
-        aiGuess = mediumAi.aiColour(playerLastChose);
+        aiGuess = avoidLast.aiColour(colourCounts, playerLastChose);
+      }
+    } else if (difficultyLevel == Difficulty.HARD) {
+      // Hard AI strategy: Randomly choose a colour
+      // The AI will guess the player's colour randomly from the available colours
+      LeastUsedStrategy leastUsed = new LeastUsedStrategy();
+      RandomStrategy random = new RandomStrategy();
+      AvoidLastStrategy avoidLast = new AvoidLastStrategy();
+      aiColour = random.aiColour(colourCounts, playerColour);
+
+      // The AI will guess the player's colour
+      if (currentRound == 1 || currentRound == 2) {
+        aiGuess = random.aiColour(colourCounts, playerGuess);
+      } else if (currentRound == 3) {
+        aiGuess = leastUsed.aiColour(colourCounts, playerLastGuess);
       }
     }
 
@@ -139,6 +158,9 @@ public class Game {
     MessageCli.PRINT_OUTCOME_ROUND.printMessage(AI_NAME, aiPoints);
     // increment the round
     currentRound++;
+
+    // update the colour counts
+    colourCounts.put(playerColour, colourCounts.get(playerColour) + 1);
     // set the last colour
     playerLastChose = playerColour;
     playerLastGuess = playerGuess;
