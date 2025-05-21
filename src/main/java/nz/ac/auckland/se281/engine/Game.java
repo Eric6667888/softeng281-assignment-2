@@ -23,6 +23,9 @@ public class Game {
   private int leastUsedCount = 0;
   private int avoidLastCount = 0;
 
+  private String gameStart = null;
+  private String gameEnd = null;
+
   public Game() {
     this.numRounds = 0;
     Game.currentRound = 1;
@@ -36,6 +39,7 @@ public class Game {
   }
 
   public void newGame(Difficulty difficulty, int numRounds, String[] options) {
+    this.gameStart = "Game started";
 
     this.playerName = options[0];
     MessageCli.WELCOME_PLAYER.printMessage(playerName);
@@ -45,6 +49,10 @@ public class Game {
   }
 
   public void play() {
+    if (gameStart == null) {
+      MessageCli.GAME_NOT_STARTED.printMessage();
+      return;
+    }
     Colour playerColour = null;
     Colour playerGuess = null;
     Colour aiColour = null;
@@ -200,5 +208,10 @@ public class Game {
     aiLastpoints = aiPoints;
   }
 
-  public void showStats() {}
+  public void showStats() {
+    if (gameStart == null) {
+      MessageCli.GAME_NOT_STARTED.printMessage();
+      return;
+    }
+  }
 }
