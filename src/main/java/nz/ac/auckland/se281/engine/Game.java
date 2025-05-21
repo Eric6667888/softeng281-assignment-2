@@ -206,6 +206,17 @@ public class Game {
     playerLastGuess = playerGuess;
     // set the last ai points
     aiLastpoints = aiPoints;
+    if (currentRound > numRounds) {
+      gameEnd = "Game ended";
+
+      if (totalPlayerPoints > totalAiPoints) {
+        MessageCli.PRINT_WINNER_GAME.printMessage(playerName);
+      } else if (totalPlayerPoints < totalAiPoints) {
+        MessageCli.PRINT_WINNER_GAME.printMessage(AI_NAME);
+      } else {
+        MessageCli.PRINT_TIE_GAME.printMessage();
+      }
+    }
   }
 
   public void showStats() {
@@ -213,5 +224,7 @@ public class Game {
       MessageCli.GAME_NOT_STARTED.printMessage();
       return;
     }
+    MessageCli.PRINT_PLAYER_POINTS.printMessage(playerName, totalPlayerPoints);
+    MessageCli.PRINT_PLAYER_POINTS.printMessage(AI_NAME, totalAiPoints);
   }
 }
