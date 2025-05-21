@@ -208,6 +208,9 @@ public class Game {
     aiLastpoints = aiPoints;
     if (currentRound > numRounds) {
       gameEnd = "Game ended";
+      showStats();
+      MessageCli.PRINT_END_GAME.printMessage();
+      // print the winner
 
       if (totalPlayerPoints > totalAiPoints) {
         MessageCli.PRINT_WINNER_GAME.printMessage(playerName);
