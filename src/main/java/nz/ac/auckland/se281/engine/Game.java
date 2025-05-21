@@ -11,8 +11,8 @@ public class Game {
   private int currentRound;
   private String playerName;
   public Difficulty difficultyLevel;
-  private int playerPoints;
-  private int aiPoints;
+  private int playerPoints = 0;
+  private int aiPoints = 0;
 
   public Game() {}
 
@@ -28,6 +28,8 @@ public class Game {
   public void play() {
     Colour playerColour = null;
     Colour playerGuess = null;
+    Colour aiColour = null;
+    Colour aiGuess = null;
     if (currentRound > numRounds) {
       MessageCli.PRINT_END_GAME.printMessage();
       return;
@@ -71,6 +73,19 @@ public class Game {
     if (currentRound % 3 == 0) {
       Colour powerColour = Colour.getRandomColourForPowerColour();
       MessageCli.PRINT_POWER_COLOUR.printMessage(powerColour.name());
+    }
+
+    if (difficultyLevel == Difficulty.EASY) {
+      // Easy AI strategy: Randomly choose a colour
+      // The AI will choose a colour randomly from the available colours
+      EasyAiStrategy easyAi = new EasyAiStrategy();
+      aiColour = easyAi.aiChooseColour(difficultyLevel);
+
+      // The AI will guess the player's colour
+      aiGuess = easyAi.aiChooseColour(difficultyLevel);
+
+      // Print the AI's choice and guess
+      MessageCli.PRINT_INFO_MOVE.printMessage(AI_NAME, aiColour.name(), aiGuess.name());
     }
     // increment the round
     currentRound++;

@@ -1,0 +1,8 @@
+package nz.ac.auckland.se281.engine;
+
+import nz.ac.auckland.se281.Main.Difficulty;
+import nz.ac.auckland.se281.model.Colour;
+
+public interface AiStrategy {
+  Colour aiChooseColour(Difficulty difficultyLevel);
+}
