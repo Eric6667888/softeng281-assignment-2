@@ -16,14 +16,19 @@ public class Game {
   public static Colour playerLastChose;
   public static Colour playerLastGuess;
 
-  public Game() {}
+  public Game() {
+    this.numRounds = 0;
+    Game.currentRound = 1;
+    this.playerName = "";
+    this.difficultyLevel = Difficulty.EASY;
+  }
 
   public void newGame(Difficulty difficulty, int numRounds, String[] options) {
 
     this.playerName = options[0];
     MessageCli.WELCOME_PLAYER.printMessage(playerName);
     this.numRounds = numRounds;
-    this.currentRound = 1;
+    currentRound = 1;
     this.difficultyLevel = difficulty;
   }
 
@@ -77,34 +82,32 @@ public class Game {
     if (difficultyLevel == Difficulty.EASY) {
       // Easy AI strategy: Randomly choose a colour
       // The AI will choose a colour randomly from the available colours
-      EasyAiStrategy easyAi = new EasyAiStrategy();
-      aiColour = easyAi.aiChooseColour(playerColour);
+      RandomStrategy easyAi = new RandomStrategy();
+      aiColour = easyAi.aiColour(playerColour);
 
       // The AI will guess the player's colour
-      aiGuess = easyAi.aiGuessColour(playerGuess);
+      aiGuess = easyAi.aiColour(playerGuess);
 
-      // Print the AI's choice and guess
-      MessageCli.PRINT_INFO_MOVE.printMessage(AI_NAME, aiColour.name(), aiGuess.name());
     } else if (difficultyLevel == Difficulty.MEDIUM) {
       // Medium AI strategy: Randomly choose a colour excluding the player's colour
-      MediumAiStrategy mediumAi = new MediumAiStrategy();
-      EasyAiStrategy easyAi = new EasyAiStrategy();
+      AvoidLastStrategy mediumAi = new AvoidLastStrategy();
+      RandomStrategy easyAi = new RandomStrategy();
       // The AI will choose a colour randomly from the available colours
       if (currentRound == 1) {
-        aiColour = easyAi.aiChooseColour(playerColour);
+        aiColour = easyAi.aiColour(playerColour);
       } else {
-        aiColour = easyAi.aiChooseColour(playerLastGuess);
+        aiColour = easyAi.aiColour(playerLastGuess);
       }
       // The AI will guess the player's colour
       if (currentRound == 1) {
-        aiGuess = easyAi.aiGuessColour(playerGuess);
+        aiGuess = easyAi.aiColour(playerGuess);
       } else {
-        aiGuess = mediumAi.aiGuessColour(playerLastChose);
+        aiGuess = mediumAi.aiColour(playerLastChose);
       }
-
-      // Print the AI's choice and guess
-      MessageCli.PRINT_INFO_MOVE.printMessage(AI_NAME, aiColour.name(), aiGuess.name());
     }
+
+    // Print the AI's choice and guess
+    MessageCli.PRINT_INFO_MOVE.printMessage(AI_NAME, aiColour.name(), aiGuess.name());
 
     // produce a random colour every 3 rounds
     if (currentRound % 3 == 0) {
