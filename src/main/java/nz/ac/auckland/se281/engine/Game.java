@@ -8,11 +8,12 @@ import nz.ac.auckland.se281.model.Colour;
 public class Game {
   public static String AI_NAME = "HAL-9000";
   private int numRounds;
-  private int currentRound;
+  public static int currentRound;
   private String playerName;
   public Difficulty difficultyLevel;
   private int totalPlayerPoints = 0;
   private int totalAiPoints = 0;
+  public static Colour playerLastColour;
 
   public Game() {}
 
@@ -76,10 +77,29 @@ public class Game {
       // Easy AI strategy: Randomly choose a colour
       // The AI will choose a colour randomly from the available colours
       EasyAiStrategy easyAi = new EasyAiStrategy();
-      aiColour = easyAi.aiChooseColour(difficultyLevel);
+      aiColour = easyAi.aiChooseColour();
 
       // The AI will guess the player's colour
-      aiGuess = easyAi.aiChooseColour(difficultyLevel);
+      aiGuess = easyAi.aiChooseColour();
+
+      // Print the AI's choice and guess
+      MessageCli.PRINT_INFO_MOVE.printMessage(AI_NAME, aiColour.name(), aiGuess.name());
+    } else if (difficultyLevel == Difficulty.MEDIUM) {
+      // Medium AI strategy: Randomly choose a colour excluding the player's colour
+      MediumAiStrategy mediumAi = new MediumAiStrategy();
+      EasyAiStrategy easyAi = new EasyAiStrategy();
+      // The AI will choose a colour randomly from the available colours
+      if (currentRound == 1) {
+        aiColour = easyAi.aiChooseColour();
+      } else {
+        aiColour = mediumAi.aiChooseColour();
+      }
+      // The AI will guess the player's colour
+      if (currentRound == 1) {
+        aiGuess = easyAi.aiChooseColour();
+      } else {
+        aiGuess = mediumAi.aiChooseColour();
+      }
 
       // Print the AI's choice and guess
       MessageCli.PRINT_INFO_MOVE.printMessage(AI_NAME, aiColour.name(), aiGuess.name());
